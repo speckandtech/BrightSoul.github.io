@@ -17,7 +17,7 @@
 			{"when": "Sat, 07 Oct 2017 17:00:00 GMT+0200", "durationInMinutes": 15, "tracks": [{"what": "18app", "who": "attendants"}]},
 			{"when": "Sat, 07 Oct 2017 17:30:00 GMT+0200", "durationInMinutes": 15, "tracks": [{"what": "ANPR Anagrafe Nazionale Pop. Res.", "who": "attendants"},{"what": "Allineamento Team digitale/Host", "who": "mentors"}]},
 			{"when": "Sat, 07 Oct 2017 18:00:00 GMT+0200", "durationInMinutes": 15, "tracks": [{"what": "Security", "who": "attendants"}]},
-			{"when": "Sat, 07 Oct 2017 18:00:00 GMT+0200", "durationInMinutes": 60, "tracks": [{"what": "Massages 💆", "who": "attendants"}]},
+			{"when": "Sat, 07 Oct 2017 18:00:00 GMT+0200", "durationInMinutes": 180, "tracks": [{"what": "Massages 💆", "who": "attendants"}]},
 			{"when": "Sat, 07 Oct 2017 20:00:00 GMT+0200", "durationInMinutes": 60, "tracks": [{"what": "Dinner 🍖", "who": "everyone"}]},
 			{"when": "Sun, 08 Oct 2017 07:30:00 GMT+0200", "durationInMinutes": 120, "tracks": [{"what": "Breakfast 🍰", "who": "everyone"}]},
 

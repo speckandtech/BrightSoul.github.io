@@ -13,10 +13,10 @@ li {display: block;}
 #container { background-image:url('background.jpg'); background-size: 100% 100%; background-position: center center;  background-repeat: no-repeat; height:100%; width:100%; margin:auto; position:relative; }
 
 @keyframes changing {
-    0%   {transform: translate(0, 0);}
-    40%  {transform: translate(0, -2vh); opacity: 0;}
+		0%   {transform: translate(0, 0);}
+		40%  {transform: translate(0, -2vh); opacity: 0;}
 	60%  {transform: translate(0, 2vh); opacity: 0;}
-    100%  {transform: translate(0, 0); opacity: 1;}
+		100%  {transform: translate(0, 0); opacity: 1;}
 }
 
 #past-session .changing, #current-session .changing, #upcoming-sessions .changing { animation-name: changing; animation-duration: 1s; position:relative; animation-timing-function: ease-in-out;}
@@ -148,7 +148,7 @@ function AgendaViewModel() {
 			if (language) {
 				language = language[1];
 			} else {
-				language = "en";
+				language = "it";
 			}
 
 			self.labels = self.updatedConfig.labels[language];
@@ -162,8 +162,8 @@ function AgendaViewModel() {
 		var currentSession = null;
 		var pastSession = null;
 		var upcomingSessions = [];
+		var tracks = 0;
 		for (var i = 0; i < self.config.sessions.length; i++) {
-
 			if (((now - self.config.sessions[i].when) > -(self.config.anticipateSessionByMinutes * 60 * 1000)) && (now - self.config.sessions[i].when - (self.config.sessions[i].durationInMinutes * 60 * 1000)) <= (self.config.isRecentForMinutes * 60 * 1000)) {
 				pastSession = self.config.sessions[i];
 			}
@@ -173,6 +173,17 @@ function AgendaViewModel() {
 				isCurrent = (now - self.config.sessions[i+1].when) < -(self.config.anticipateSessionByMinutes * 60 * 1000);
 			}
 			if (!isCurrent) {
+				if ((now < self.config.sessions[i].when) && i < self.config.sessions.length -1) {
+					// upcomingSessions = [];
+					for (var j = i+1; j < Math.min(i+5, self.config.sessions.length); j++) {
+						if (tracks + self.config.sessions[j].tracks.length <= 4) {
+							tracks += self.config.sessions[j].tracks.length;
+							upcomingSessions.push(self.config.sessions[j]);
+						} else {
+							break;
+						}
+					}
+				}
 				continue;
 			}
 			currentSession = self.config.sessions[i];
@@ -180,19 +191,6 @@ function AgendaViewModel() {
 				pastSession = self.config.sessions[i-1];
 			} else {
 				pastSession = null;
-			}
-
-			if (i < self.config.sessions.length -1) {
-				upcomingSessions = [];
-				var tracks = 0;
-				for (var j = i+1; j < Math.min(i+5, self.config.sessions.length); j++) {
-					if (tracks + self.config.sessions[j].tracks.length <= 4) {
-						tracks += self.config.sessions[j].tracks.length;
-						upcomingSessions.push(self.config.sessions[j]);
-					} else {
-						break;
-					}
-				}
 			}
 			break;
 		}

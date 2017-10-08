@@ -165,25 +165,25 @@ function AgendaViewModel() {
 		var upcomingSessions = [];
 		var tracks = 0;
 		for (var i = 0; i < self.config.sessions.length; i++) {
-			console.log(i)
 			if (((now - self.config.sessions[i].when) > -(self.config.anticipateSessionByMinutes * 60 * 1000)) && (now - self.config.sessions[i].when - (self.config.sessions[i].durationInMinutes * 60 * 1000)) <= (self.config.isRecentForMinutes * 60 * 1000)) {
 				pastSession = self.config.sessions[i];
-				console.log(pastSession)
 			}
 
 			isCurrent = ((now - self.config.sessions[i].when) > -(self.config.anticipateSessionByMinutes * 60 * 1000)) && ((now - self.config.sessions[i].when) < (self.config.sessions[i].durationInMinutes * 60 * 1000));
 			if (isCurrent && i < self.config.sessions.length - 1) {
 				isCurrent = (now - self.config.sessions[i+1].when) < -(self.config.anticipateSessionByMinutes * 60 * 1000);
 			}
-			if (i < self.config.sessions.length -1) {
-				upcomingSessions = [];
-				var tracks = 0;
-				for (var j = i+1; j < Math.min(i+5, self.config.sessions.length); j++) {
-					if (tracks + self.config.sessions[j].tracks.length <= 4) {
-						tracks += self.config.sessions[j].tracks.length;
-						upcomingSessions.push(self.config.sessions[j]);
-					} else {
-						break;
+			if(now > self.config.sessions[i].when) {
+				if (i < self.config.sessions.length - 1) {
+					upcomingSessions = [];
+					var tracks = 0;
+					for (var j = i+1; j < Math.min(i+5, self.config.sessions.length); j++) {
+						if (tracks + self.config.sessions[j].tracks.length <= 4) {
+							tracks += self.config.sessions[j].tracks.length;
+							upcomingSessions.push(self.config.sessions[j]);
+						} else {
+							break;
+						}
 					}
 				}
 			}

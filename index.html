@@ -3,7 +3,7 @@
 <head>
 <title>Hack Developers Italia</title>
 <!-- This page can be configured by editing the  self.config.json file -->
-<link href="https://fonts.googleapis.com/css?family=Titillium+Web" rel="stylesheet"> 
+<link href="https://fonts.googleapis.com/css?family=Titillium+Web" rel="stylesheet">
 <style>
 * { font-family: 'Titillium Web', sans-serif; color: white;}
 html, body {margin:0; padding:0; width: 100%; height:100%;}
@@ -34,6 +34,7 @@ li {display: block;}
 #past-session .session-timeframe, #past-session .session-time, #upcoming-sessions .session-timeframe, #upcoming-sessions .session-time {font-size:3vh; color: rgba(255, 255, 255, 0.7)}
 
 .attendants-indicator {background-color: #f1751f; display: inline-block;}
+.everyone-indicator {background-color: #f122a8; display: inline-block;}
 .mentors-indicator {background-color: #8c36d7; display: inline-block;}
 
 .session-time {margin-right:2vh; line-height:4vh}
@@ -58,7 +59,7 @@ li {display: block;}
 		<span class="session-time" data-bind="text: $root.formatTime(when)"></span>
 		<ul data-bind="foreach: tracks">
 			<li>
-				<span class="audience-initial" data-bind="text: $root.formatAudienceInitial(who), css: {'attendants-indicator': who == 'attendants', 'mentors-indicator': who == 'mentors'}"></span>
+				<span class="audience-initial" data-bind="text: $root.formatAudienceInitial(who), css: {'attendants-indicator': who == 'attendants', 'mentors-indicator': who == 'mentors', 'everyone-indicator': who == 'everyone'}"></span>
 				<span class="track-title" data-bind="text: what"></span>
 			</li>
 		</ul>
@@ -75,7 +76,7 @@ li {display: block;}
 		</div>
 		<ul data-bind="foreach: tracks">
 			<li>
-				<span class="audience" data-bind="text: $root.formatAudience(who), css: {'attendants-indicator': who == 'attendants', 'mentors-indicator': who == 'mentors'}"></span> <span class="track-title" data-bind="text: what"></span>
+				<span class="audience" data-bind="text: $root.formatAudience(who), css: {'attendants-indicator': who == 'attendants', 'mentors-indicator': who == 'mentors', 'everyone-indicator': who == 'everyone'}"></span> <span class="track-title" data-bind="text: what"></span>
 			</li>
 		</ul>
 	</div>
@@ -92,7 +93,7 @@ li {display: block;}
 			<span class="session-time" data-bind="text: $root.formatTime(when)"></span>
 			<ul data-bind="foreach: tracks">
 				<li>
-					<span class="audience-initial" data-bind="text: $root.formatAudienceInitial(who), css: {'attendants-indicator': who == 'attendants', 'mentors-indicator': who == 'mentors'}"></span>
+					<span class="audience-initial" data-bind="text: $root.formatAudienceInitial(who), css: {'attendants-indicator': who == 'attendants', 'mentors-indicator': who == 'mentors', 'everyone-indicator': who == 'everyone'}"></span>
 					<span class="track-title" data-bind="text: what"></span>
 				</li>
 			</ul>
@@ -106,7 +107,7 @@ li {display: block;}
 
 function AgendaViewModel() {
 	var self = this;
-	
+
 	self.pastSession = ko.observable(null);
 	self.currentSession = ko.observable(null);
 	self.upcomingSessions = ko.observableArray([]);
@@ -116,7 +117,7 @@ function AgendaViewModel() {
 	self.config = null;
 	self.updatedConfig = null;
 	self.loaded = ko.observable(false);
-	
+
 	function updateConfiguration() {
 		getJson("config.json?v=" + Math.random(), function(error, data) {
 			if (!error) {
@@ -125,62 +126,62 @@ function AgendaViewModel() {
 				if (needsUpdate) {
 					updateSessions();
 				}
-				
+
 			} else {
 				console.error("Couldn't update configuration, will try again in a few minutes...");
 			}
 		})
 	}
-	
+
 	function updateSessions() {
-	
+
 		if (!self.config && !self.updatedConfig)
 			return;
 
-			
+
 		if (self.config != self.updatedConfig) {
 			self.config = self.updatedConfig.config;
 			self.config.sessions.forEach(function(item) { item.when = new Date(item.when); });
 			//self.config.sessions.sort(function(item1, item2) { return item1.when.getTime() > item2.when.getTime();});
-			
+
 			var language = /lang=(en|it)/.exec(window.location.search);
 			if (language) {
 				language = language[1];
 			} else {
-				language = "it";
+				language = "en";
 			}
-			
+
 			self.labels = self.updatedConfig.labels[language];
 			if (!self.loaded()) {
 				self.loaded(true);
 			}
 		}
-	
+
 		var isCurrent;
 		var now = new Date();
 		var currentSession = null;
 		var pastSession = null;
-		var upcomingSessions = [];		
+		var upcomingSessions = [];
 		for (var i = 0; i < self.config.sessions.length; i++) {
-		
+
 			if (((now - self.config.sessions[i].when) > -(self.config.anticipateSessionByMinutes * 60 * 1000)) && (now - self.config.sessions[i].when - (self.config.sessions[i].durationInMinutes * 60 * 1000)) <= (self.config.isRecentForMinutes * 60 * 1000)) {
 				pastSession = self.config.sessions[i];
 			}
-			
-			isCurrent = ((now - self.config.sessions[i].when) > -(self.config.anticipateSessionByMinutes * 60 * 1000)) && ((now - self.config.sessions[i].when) < (self.config.sessions[i].durationInMinutes * 60 * 1000));	
+
+			isCurrent = ((now - self.config.sessions[i].when) > -(self.config.anticipateSessionByMinutes * 60 * 1000)) && ((now - self.config.sessions[i].when) < (self.config.sessions[i].durationInMinutes * 60 * 1000));
 			if (isCurrent && i < self.config.sessions.length - 1) {
 				isCurrent = (now - self.config.sessions[i+1].when) < -(self.config.anticipateSessionByMinutes * 60 * 1000);
 			}
 			if (!isCurrent) {
 				continue;
 			}
-			currentSession = self.config.sessions[i];	
+			currentSession = self.config.sessions[i];
 			if (i > 0 && ((now - self.config.sessions[i-1].when - (self.config.sessions[i-1].durationInMinutes * 60 * 1000)) <= (self.config.isRecentForMinutes * 60 * 1000))) {
 				pastSession = self.config.sessions[i-1];
 			} else {
 				pastSession = null;
 			}
-			
+
 			if (i < self.config.sessions.length -1) {
 				upcomingSessions = [];
 				var tracks = 0;
@@ -195,8 +196,8 @@ function AgendaViewModel() {
 			}
 			break;
 		}
-		
-		
+
+
 		if (currentSession) {
 			var remainingMinutes = Math.ceil((currentSession.when - now) / 1000 / 60);
 			if (remainingMinutes <= 0) {
@@ -207,70 +208,70 @@ function AgendaViewModel() {
 		} else {
 			self.sessionStartingIn(null);
 		}
-		
+
 		if (isSameSession(currentSession, self.currentSession()) && isSameSession(pastSession, self.pastSession()) && areSameSessions(upcomingSessions, self.upcomingSessions())) {
 			return;
 		}
-		
+
 		changeSessions(pastSession, currentSession, upcomingSessions);
 	}
-	
+
 	function isSameSession(session1, session2) {
 		if ((session1 == null && session2 != null) || (session1 != null && session2 == null)) {
 			return false;
 		}
-		
+
 		if (session1 == null && session2 == null) {
 			return true;
 		}
-		
+
 		var same = session1.when.getTime() == session2.when.getTime();
 		same = same && (session1.durationInMinutes == session2.durationInMinutes);
 		same = same && (session1.tracks.length == session2.tracks.length);
-		
+
 		if (!same) {
 			return false;
 		}
-		
+
 		for (var i = 0; i < session1.tracks.length; i++) {
 			same = same && (session1.tracks[i].who == session2.tracks[i].who);
 			same = same && (session1.tracks[i].what == session2.tracks[i].what);
 		}
-		
+
 		return same;
 	}
-	
+
 	function areSameSessions(sessions1, sessions2) {
-	
+
 		if ((sessions1 == null && sessions2 != null) || (sessions1 != null && sessions2 == null)) {
 			return false;
 		}
-		
+
 		if (sessions1 == null && sessions2 == null) {
 			return true;
 		}
-		
+
 		if (sessions1.length != sessions2.length) {
 			return false;
 		}
-		
+
 		var same = true;
 		for (var i = 0; i < sessions1.length; i++) {
 			same = same && isSameSession(sessions1[i], sessions2[i]);
 		}
 		return same;
 	}
-	
+
 	function changeSessions(pastSession, currentSession, upcomingSessions) {
 		self.changingSession(true);
-		setTimeout(function() { 
+		setTimeout(function() {
 			self.pastSession(pastSession);
-			self.currentSession(currentSession); 
+			self.currentSession(currentSession);
 			self.upcomingSessions(upcomingSessions);
 		}, 500);
 		setTimeout(function() { self.changingSession(false); }, 1500);
 	}
-	
+
 	function getJson(url, callback) {
 		var xhr = new XMLHttpRequest();
 		xhr.open('GET', url, true);
@@ -285,19 +286,19 @@ function AgendaViewModel() {
 		};
 		xhr.send();
 	};
-	
+
 	//thanks to https://shashikantbhosale.wordpress.com/2013/07/17/javascript-convert-24-hour-clock-time-format-to-12-hour-time-clock-format/
 	self.formatTime = function(date) {
 		var hour    = date.getHours();  /* Returns the hour (from 0-23) */
 		var minutes     = date.getMinutes();  /* Returns the minutes (from 0-59) */
 		var result  = hour;
 		var ext     = '';
-		
+
 		if(self.config.dateFormat == 12){
 			if(hour > 12){
 				ext = 'PM';
 				hour = (hour - 12);
-		
+
 				if(hour < 10){
 					result = "0" + hour;
 				}else if(hour == 12){
@@ -313,27 +314,27 @@ function AgendaViewModel() {
 			}
 		} else  {
 			if(hour < 10){
-				result = "0" + hour; 
+				result = "0" + hour;
 			}
 		}
-		
+
 		if(minutes < 10){
-			minutes = "0" + minutes; 
+			minutes = "0" + minutes;
 		}
-		
-		result = result + ":" + minutes + ' ' + ext; 
+
+		result = result + ":" + minutes + ' ' + ext;
 		return result;
 	};
-	
+
 	self.formatAudienceInitial = function(audience) {
 		return self.labels[audience + "Initial"];
 	};
-	
+
 	self.formatAudience = function(audience) {
 		return self.labels[audience];
 	};
-	
-	
+
+
 	self.init = function() {
 		//updateSessions();
 		updateConfiguration();

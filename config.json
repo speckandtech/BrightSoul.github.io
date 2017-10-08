@@ -1,7 +1,7 @@
 ﻿{
 	"config": {
 		"dateFormat": 24,
-		"anticipateSessionByMinutes": 5,
+		"anticipateSessionByMinutes": 15,
 		"isRecentForMinutes": 30,
 		"sessions": [
 			{"when": "Sat, 07 Oct 2017 09:00:00 GMT+0200", "durationInMinutes": 60, "tracks": [{"what": "Check-in", "who": "attendants"}]},
@@ -18,7 +18,7 @@
 			{"when": "Sat, 07 Oct 2017 17:30:00 GMT+0200", "durationInMinutes": 15, "tracks": [{"what": "ANPR Anagrafe Nazionale Pop. Res.", "who": "attendants"},{"what": "Allineamento Team digitale/Host", "who": "mentors"}]},
 			{"when": "Sat, 07 Oct 2017 18:00:00 GMT+0200", "durationInMinutes": 15, "tracks": [{"what": "Security", "who": "attendants"}]},
 			{"when": "Sat, 07 Oct 2017 21:00:00 GMT+0200", "durationInMinutes": 60, "tracks": [{"what": "Dinner 🍖", "who": "everyone"}]},
-			{"when": "Sun, 08 Oct 2017 07:30:00 GMT+0200", "durationInMinutes": 120, "tracks": [{"what": "Breakfast 🍰", "who": "everyone"}]},
+			{"when": "Sun, 08 Oct 2017 07:30:00 GMT+0200", "durationInMinutes": 60, "tracks": [{"what": "Breakfast 🍰", "who": "everyone"}]},
 
 			{"when": "Sun, 08 Oct 2017 09:30:00 GMT+0200", "durationInMinutes": 15, "tracks": [{"what": "SPID Sistema Pubblico Identità Digitale", "who": "attendants"}]},
 			{"when": "Sun, 08 Oct 2017 10:00:00 GMT+0200", "durationInMinutes": 15, "tracks": [{"what": "DAF Data & Analytics Framework", "who": "attendants"}]},
